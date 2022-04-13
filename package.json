@@ -1,0 +1,17 @@
+{
+  "name": "whiffbottv",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src",
+  "scripts": {
+    "start": "node .",
+    "type": "module",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "whifflesdev",
+  "license": "ISC",
+  "dependencies": {
+    "esm": "^3.2.25",
+    "tmi.js": "^1.8.5"
+  }
+}
