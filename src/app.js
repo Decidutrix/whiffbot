@@ -1,9 +1,10 @@
-//imports
+// ➤ I M P O R T S
 import tmi from 'tmi.js';
-import { channel } from 'tmi.js/lib/utils';
+import { subscribers } from 'tmi.js/lib/commands';
+import { channel, username } from 'tmi.js/lib/utils';
 import { BOT_USERNAME, OAUTH_TOKEN , CHANNEL_NAME, BLOCKED_WORDS } from './constants';
 
-//start of bot code
+// ➤ S T A R T    O F    B O T   C O D E
 
 const options = {
     options: { debug: true, messagesLogLevel: "info" },
@@ -23,6 +24,18 @@ const options = {
 const client = new tmi.Client(options);
 
 client.connect();
+client.on('hosted', (channel, username, viewers, autohost) => {
+    onHostedHandler(channel, username, viewers, autohost)
+})
+
+client.on('raided', (channel,username, viewers) => {
+    onRaidedHandler(channel, username, viewers)
+})
+
+client.on(subscribers, (channel, username, method, message, userstate) => {
+    onSubscriptionHandler(channel, username, method, message, userstate)
+})
+
 client.on('message', (channel, userstate, message, self) => {
     if(self) return;
     if (userstate.username === BOT_USERNAME) return;
@@ -58,12 +71,13 @@ client.on('message', (channel, userstate, message, self) => {
 });
 
 
+// ➤ F U N C T I O N S
 
 function checkTwitchChat(userstate, message, channel) {
     message = message.toLowerCase()
     let shouldSendMessage = false
 
-    // first check message
+    // bot checks message
 
     shouldSendMessage = BLOCKED_WORDS.some(blockedWord => message.includes(blockedWord.toLowerCase()))
 
@@ -71,19 +85,39 @@ function checkTwitchChat(userstate, message, channel) {
     //bot moderation actions
 
     if (shouldSendMessage) {
-        // tell user
+        // tell user that the message contains a word from the BLOCKED_WORDS list
         client.say(channel, `@${userstate.username}, sorry you're message contained a no no`);
 
         // delete message
-        client.deletemessage(channel, userstate.id); 
-}
+        client.deletemessage(channel, userstate.id);
+    }
+
     
+}
+
+function onHostedHandler(channel, username, viewers, autohost) {
+    client.say(channel, `Thank you @${username} for the host of ${viewers}!`);
+}
+
+function onRaidedHandler(channel, username, viewers) {
+    client.say(channel, `THANK YOU @${username} FOR RAIDING WITH ${viewers}!`);
+}
+
+
+function onSubscriptionHandler(channel, username, method, message, userstate) {
+    client.say(channel, `THANK YOU @${username} FOR SUBBING, WELCOME TO THE WHIFFLE WAFFLES!`);
+}
+
+
+// ➤ T I M E R S
+
 // timer goes off to ask people to follow, chat or follow other social media
     function StreamTimer() {
         client.action(channel, 'enjoying stream? Then why dont you leave a follow, say something in chat or even go subscribe to the Youtube channel!');
     }
     setInterval(StreamTimer, 480000);
 //
+
 
 //
     function TikTokTimer() {
@@ -92,16 +126,10 @@ function checkTwitchChat(userstate, message, channel) {
     setInterval(TikTokTimer, 780000);
 //
 
+
 //
     function DiscTimer() {
         client.action(channel, 'enjoying talking here? Continue the conversation over on Discord! https://discord.gg/A2rYbngxcv');
     }
     setInterval(DiscTimer, 1.02e+6);
 //
-
-
-
-    
-
-
-}
