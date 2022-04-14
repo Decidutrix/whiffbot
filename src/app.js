@@ -77,6 +77,28 @@ function checkTwitchChat(userstate, message, channel) {
         // delete message
         client.deletemessage(channel, userstate.id); 
 }
+    
+// timer goes off to ask people to follow, chat or follow other social media
+    function StreamTimer() {
+        client.action(channel, 'enjoying stream? Then why dont you leave a follow, say something in chat or even go subscribe to the Youtube channel!');
+    }
+    setInterval(StreamTimer, 480000);
+//
+
+//
+    function TikTokTimer() {
+        client.action(channel, 'come check out our newest TikTok https://vm.tiktok.com/ZTd5LDVsL/');
+    }
+    setInterval(TikTokTimer, 780000);
+//
+
+//
+    function DiscTimer() {
+        client.action(channel, 'enjoying talking here? Continue the conversation over on Discord! https://discord.gg/A2rYbngxcv');
+    }
+    setInterval(DiscTimer, 1.02e+6);
+//
+
 
 
     
