@@ -2,7 +2,7 @@
 import tmi from 'tmi.js';
 import { subscribers } from 'tmi.js/lib/commands';
 import { channel, username } from 'tmi.js/lib/utils';
-import { BOT_USERNAME, OAUTH_TOKEN , CHANNEL_NAME, BLOCKED_WORDS } from './constants';
+import { BOT_USERNAME, OAUTH_TOKEN , CHANNEL_NAME, BLOCKED_WORDS, MOD_USERS } from './constants';
 
 // ➤ S T A R T    O F    B O T   C O D E
 
@@ -21,30 +21,31 @@ const options = {
 }
 
 
+// const badges = tags.badges || {};
 const client = new tmi.Client(options);
 
 client.connect();
 client.on('hosted', (channel, username, viewers, autohost) => {
     onHostedHandler(channel, username, viewers, autohost)
-})
+});
 
 client.on('raided', (channel,username, viewers) => {
     onRaidedHandler(channel, username, viewers)
-})
+});
 
 client.on(subscribers, (channel, username, method, message, userstate) => {
     onSubscriptionHandler(channel, username, method, message, userstate)
-})
+});
 
 client.on('message', (channel, userstate, message, self) => {
     if(self) return;
-    if (userstate.username === BOT_USERNAME) return;
-    if (userstate.username === CHANNEL_NAME) return;
+    if(userstate.username === BOT_USERNAME) return;
+    if(userstate.username === MOD_USERS) return;
     if(message.toLowerCase() === 'hello') {
         client.say(channel, `@${userstate.username}, hey there!`);
     }
 
-    checkTwitchChat (userstate, message, channel)
+    checkTwitchChat(userstate, message, channel)
 
     switch(message) {
         case '!discord':
@@ -59,43 +60,65 @@ client.on('message', (channel, userstate, message, self) => {
         case '!sens':
             client.say(channel, `|sensitivity aim : 0.288| |scoped sens : 1|`);
             break;
-        
-
-
-
-
-
-
+        case '!so':
+            client.say(channel, `Go check out ${userstate.username} and follow to see when they go live over at twitch.tv/${userstate.username}`);
+            break;
+        case '!rank':
+            client.say(channel, `Nyxie is currently Bronze 3 in Valorant`);
+            break;
+        case '!dead':
+            client.say(channel, `Nyxie has died ${addDeathCounter()} time(s)`);
+            break;
+        case '!fall':
+            client.say(channel, `Nyxie has fell ${addFallCounter()} time(s)`);
+            break;
     }
+
+    
+    
+
 
 });
 
 
-// ➤ F U N C T I O N S
 
+// ➤ C O U N T E R S
+
+var deathCounter = 0;
+function addDeathCounter() {
+    return deathCounter = deathCounter + 1;
+}
+
+var fallCounter = 0;
+function addFallCounter() {
+    return fallCounter = fallCounter+ 1;
+}
+
+
+
+
+// ➤ F U N C T I O N S
+let shouldSendMessage = false
 function checkTwitchChat(userstate, message, channel) {
     message = message.toLowerCase()
-    let shouldSendMessage = false
 
     // bot checks message
 
     shouldSendMessage = BLOCKED_WORDS.some(blockedWord => message.includes(blockedWord.toLowerCase()))
 
-
     //bot moderation actions
-
     if (shouldSendMessage) {
         // tell user that the message contains a word from the BLOCKED_WORDS list
         client.say(channel, `@${userstate.username}, sorry you're message contained a no no`);
 
-        // delete message
-        client.deletemessage(channel, userstate.id);
+        client.deletemessage(channel, message.id)
     }
 
     
+    
 }
 
-function onHostedHandler(channel, username, viewers, autohost) {
+function onHostedHandler(channel, username, viewers) {
     client.say(channel, `Thank you @${username} for the host of ${viewers}!`);
 }
 
@@ -104,7 +127,7 @@ function onRaidedHandler(channel, username, viewers) {
 }
 
 
-function onSubscriptionHandler(channel, username, method, message, userstate) {
+function onSubscriptionHandler(channel, username) {
     client.say(channel, `THANK YOU @${username} FOR SUBBING, WELCOME TO THE WHIFFLE WAFFLES!`);
 }
 
@@ -112,24 +135,22 @@ function onSubscriptionHandler(channel, username, method, message, userstate) {
 // ➤ T I M E R S
 
 // timer goes off to ask people to follow, chat or follow other social media
-    function StreamTimer(channel) {
-        client.action(channel, 'enjoying stream? Then why dont you leave a follow, say something in chat or even go subscribe to the Youtube channel!');
-    }
-    setInterval(StreamTimer, 480000);
-//
-
-
-//
-    function TikTokTimer(channel) {
-        client.action(channel, 'come check out our newest TikTok {tiktok link here}');
-    }
-    setInterval(TikTokTimer, 780000);
-//
-
+function StreamTimer() {
+    client.action(channel(CHANNEL_NAME), 'enjoying stream? Then why dont you leave a follow, say something in chat or even go subscribe to the Youtube channel!');
+}
+setInterval(StreamTimer, 480000);
+//480000 millisecs = 8 mins
 
 //
-    function DiscTimer(channel) {
-        client.action(channel, 'enjoying talking here? Continue the conversation over on Discord! {discord link here}');
-    }
-    setInterval(DiscTimer, 1.02e+6);
+function TikTokTimer() {
+    client.action(channel(CHANNEL_NAME), 'come check out our newest TikTok https://vm.tiktok.com/ZTd5LDVsL/');
+}
+setInterval(TikTokTimer, 780000);
+//780000 millisecs = 13 mins
+
 //
+function DiscTimer() {
+    client.action(channel(CHANNEL_NAME), 'enjoying talking here? Continue the conversation over on Discord! https://discord.gg/A2rYbngxcv');
+}
+setInterval(DiscTimer, 1.02e+6);
+//1.02e+6 millisecs = 17 mins
