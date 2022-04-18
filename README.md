@@ -9,5 +9,5 @@ https://nodejs.org/en/
 -tmi.js-
 https://tmijs.com/
 
-- My Twitch Channel -
+-My Twitch Channel-
 https://www.twitch.tv/nerdynyxie
