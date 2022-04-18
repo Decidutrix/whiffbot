@@ -1,7 +1,8 @@
 // ➤ I M P O R T S
 import tmi from 'tmi.js';
+import axios from 'axios';
 import { subscribers } from 'tmi.js/lib/commands';
-import { channel, username } from 'tmi.js/lib/utils';
+import { channel, get, username } from 'tmi.js/lib/utils';
 import { BOT_USERNAME, OAUTH_TOKEN , CHANNEL_NAME, BLOCKED_WORDS, MOD_USERS } from './constants';
 
 // ➤ S T A R T    O F    B O T   C O D E
@@ -21,8 +22,10 @@ const options = {
 }
 
 
-// const badges = tags.badges || {};
+
 const client = new tmi.Client(options);
+
+const badges = tags.badges || {};
 
 client.connect();
 client.on('hosted', (channel, username, viewers, autohost) => {
@@ -60,11 +63,11 @@ client.on('message', (channel, userstate, message, self) => {
         case '!sens':
             client.say(channel, `|sensitivity aim : 0.288| |scoped sens : 1|`);
             break;
-        case '!so':
-            client.say(channel, `Go check out ${userstate.username} and follow to see when they go live over at twitch.tv/${userstate.username}`);
+        case '!shout':
+            client.say(channel, `Go check out ${returnUsername()} and follow to see when they go live over at twitch.tv/${returnUsername()}`);
             break;
         case '!rank':
-            client.say(channel, `Nyxie is currently Bronze 3 in Valorant`);
+            client.say(channel, `Nyxie is currently Silver 1 in Valorant`);
             break;
         case '!dead':
             client.say(channel, `Nyxie has died ${addDeathCounter()} time(s)`);
@@ -73,10 +76,6 @@ client.on('message', (channel, userstate, message, self) => {
             client.say(channel, `Nyxie has fell ${addFallCounter()} time(s)`);
             break;
     }
-
-    
-    
-
 
 });
 
@@ -111,12 +110,13 @@ function checkTwitchChat(userstate, message, channel) {
         // tell user that the message contains a word from the BLOCKED_WORDS list
         client.say(channel, `@${userstate.username}, sorry you're message contained a no no`);
 
-        client.deletemessage(channel, message.id)
+        client.deletemessage(channel, userstate.id)
     }
 
     
     
 }
+
 
 function onHostedHandler(channel, username, viewers) {
     client.say(channel, `Thank you @${username} for the host of ${viewers}!`);
