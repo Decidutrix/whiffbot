@@ -138,19 +138,19 @@ function onSubscriptionHandler(channel, username) {
 function StreamTimer() {
     client.action(channel(CHANNEL_NAME), 'enjoying stream? Then why dont you leave a follow, say something in chat or even go subscribe to the Youtube channel!');
 }
-setInterval(StreamTimer, 480000);
-//480000 millisecs = 8 mins
+setInterval(StreamTimer, 1.5e+6);
+//1.5e+6 = timer goes off every 25 mins
 
 //
 function TikTokTimer() {
     client.action(channel(CHANNEL_NAME), 'come check out our newest TikTok https://vm.tiktok.com/ZTd5LDVsL/');
 }
-setInterval(TikTokTimer, 780000);
-//780000 millisecs = 13 mins
+setInterval(TikTokTimer, 900000);
+//900000 = timer goes off every 15 mins
 
 //
 function DiscTimer() {
     client.action(channel(CHANNEL_NAME), 'enjoying talking here? Continue the conversation over on Discord! https://discord.gg/A2rYbngxcv');
 }
-setInterval(DiscTimer, 1.02e+6);
-//1.02e+6 millisecs = 17 mins
+setInterval(DiscTimer, 1.8e+6);
+//1.8e+6 = timer goes off every 30 mins
