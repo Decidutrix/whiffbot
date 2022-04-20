@@ -64,7 +64,7 @@ client.on('message', (channel, userstate, message, self) => {
             client.say(channel, `|sensitivity aim : 0.288| |scoped sens : 1|`);
             break;
         case '!shout':
-            client.say(channel, `Go check out ${returnUsername()} and follow to see when they go live over at twitch.tv/${returnUsername()}`);
+            client.say(channel, `${userstate['display-name']} was playing Go check them out and follow to see when they go live over at twitch.tv/${userstate['display-name']}`);
             break;
         case '!rank':
             client.say(channel, `Nyxie is currently Silver 1 in Valorant`);
