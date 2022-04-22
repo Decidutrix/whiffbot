@@ -1,9 +1,11 @@
 // ➤ I M P O R T S
 import tmi from 'tmi.js';
 import axios from 'axios';
-import { subscribers } from 'tmi.js/lib/commands';
+import { mod, subscribers } from 'tmi.js/lib/commands';
 import { channel, get, username } from 'tmi.js/lib/utils';
-import { BOT_USERNAME, OAUTH_TOKEN , CHANNEL_NAME, BLOCKED_WORDS, MOD_USERS } from './constants';
+import { BOT_USERNAME, OAUTH_TOKEN , CHANNEL_NAME, BLOCKED_WORDS } from './constants';
+import tmiJs from 'tmi.js';
+import { error } from 'tmi.js/lib/logger';
 
 // ➤ S T A R T    O F    B O T   C O D E
 
@@ -22,10 +24,7 @@ const options = {
 }
 
 
-
 const client = new tmi.Client(options);
-
-const badges = tags.badges || {};
 
 client.connect();
 client.on('hosted', (channel, username, viewers, autohost) => {
@@ -43,12 +42,17 @@ client.on(subscribers, (channel, username, method, message, userstate) => {
 client.on('message', (channel, userstate, message, self) => {
     if(self) return;
     if(userstate.username === BOT_USERNAME) return;
-    if(userstate.username === MOD_USERS) return;
     if(message.toLowerCase() === 'hello') {
         client.say(channel, `@${userstate.username}, hey there!`);
     }
+    if(message.toLowerCase() === 'back'){
+        client.say(channel, `@${userstate.username}, welcome back`);
+    }
+    
 
     checkTwitchChat(userstate, message, channel)
+
+    
 
     switch(message) {
         case '!discord':
@@ -64,7 +68,7 @@ client.on('message', (channel, userstate, message, self) => {
             client.say(channel, `|sensitivity aim : 0.288| |scoped sens : 1|`);
             break;
         case '!shout':
-            client.say(channel, `${userstate['display-name']} was playing Go check them out and follow to see when they go live over at twitch.tv/${userstate['display-name']}`);
+            client.say(channel, target, `${userstate['display-name']} got a shoutout, Go check them out and follow to see when they go live over at twitch.tv/${userstate['display-name']}`);
             break;
         case '!rank':
             client.say(channel, `Nyxie is currently Silver 1 in Valorant`);
@@ -75,9 +79,19 @@ client.on('message', (channel, userstate, message, self) => {
         case '!fall':
             client.say(channel, `Nyxie has fell ${addFallCounter()} time(s)`);
             break;
+        case '!comms':
+            client.say(channel, `@${userstate.username}, (!)discord, (!)lurk, (!)rules, (!)sens, (!)so, (!)rank, (!)dead, (!)fall`)
+            break;
     }
 
+    
+
+
+
+    
+
 });
+
 
 
 
@@ -97,13 +111,18 @@ function addFallCounter() {
 
 
 // ➤ F U N C T I O N S
+// var duration = 300
 let shouldSendMessage = false
-function checkTwitchChat(userstate, message, channel) {
+var duration = 300
+function checkTwitchChat(userstate, message, tags, channel) {
     message = message.toLowerCase()
 
     // bot checks message
 
     shouldSendMessage = BLOCKED_WORDS.some(blockedWord => message.includes(blockedWord.toLowerCase()))
+
+    //bot ignores these UserIDs
+
 
     //bot moderation actions
     if (shouldSendMessage) {
@@ -111,10 +130,13 @@ function checkTwitchChat(userstate, message, channel) {
         client.say(channel, `@${userstate.username}, sorry you're message contained a no no`);
 
         client.deletemessage(channel, userstate.id)
-    }
 
-    
-    
+    } 
+} 
+
+
+function returnUsername(getUserURL) {
+    return getUserURL;
 }
 
 
