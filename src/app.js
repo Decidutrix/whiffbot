@@ -153,22 +153,21 @@ function onSubscriptionHandler(channel, username) {
     client.say(channel, `THANK YOU @${username} FOR SUBBING, WELCOME TO THE WHIFFLE WAFFLES!`);
 }
 
-
 // ➤ T I M E R S
 
 // timer goes off to ask people to follow, chat or follow other social media
 function StreamTimer() {
     client.action(channel(CHANNEL_NAME), 'enjoying stream? Then why dont you leave a follow, say something in chat or even go subscribe to the Youtube channel!');
 }
-setInterval(StreamTimer, 1.5e+6);
-//1.5e+6 = timer goes off every 25 mins
+setInterval(StreamTimer, 1.26e+6);
+//1.5e+6 = timer goes off every 21 mins
 
 //
 function TikTokTimer() {
     client.action(channel(CHANNEL_NAME), 'come check out our newest TikTok https://vm.tiktok.com/ZTd5LDVsL/');
 }
-setInterval(TikTokTimer, 900000);
-//900000 = timer goes off every 15 mins
+setInterval(TikTokTimer, 2.7e+6);
+//900000 = timer goes off every 45 mins
 
 //
 function DiscTimer() {
